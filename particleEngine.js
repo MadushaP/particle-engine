@@ -422,7 +422,6 @@ function scriptLoad(exampleNum) {
       }
 
       spreadCon = 6.9;
-      fade = 0.2;
       emitters.push(new Emitter(new Vector(200, 500), Vector.fromAngle(0, 2)));
       fields.push(new Field(new Vector(500, 450), -200))
       fields.push(new Field(new Vector(600, 400), 1000))
@@ -441,7 +440,7 @@ function scriptLoad(exampleNum) {
       }
 
       var audio = new Audio();
-      audio.src = "dd.mp3";
+      audio.src = "kay.mp3";
       audio.controls = false;
       audio.loop = false;
       audio.autoplay = true;
@@ -449,11 +448,11 @@ function scriptLoad(exampleNum) {
       //Create new object audio instance
       context = new AudioContext();
       gradientMode = true;
-
+      fade = 0.2
       //Create analyser on context
       analyser = context.createAnalyser();
 
-      particleSize = 5;
+      particleSize = 8;
       //Pass audio into create media method
       source = context.createMediaElementSource(audio);
 
