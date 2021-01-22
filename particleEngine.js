@@ -1,4 +1,16 @@
 "use strict";
+var audio = new Audio();
+audio.src = "kay.mp3";
+audio.controls = false;
+audio.loop = false;
+audio.autoplay = false;
+context = new AudioContext();
+
+analyser = context.createAnalyser();
+source = context.createMediaElementSource(audio);
+source.connect(analyser);
+analyser.connect(context.destination);
+
 
 var maxParticles = 2000000,
   particleSize = 2,
@@ -99,7 +111,7 @@ function forceChange(force) {
   forceConstant = 3.6 - force;
 }
 
-var particleColour = 'rgb(26,100,25)';
+var particleColour = 'rgb(0,255,0)';
 
 function switchParticleColour(colour) {
   particleColour = colour;
@@ -393,6 +405,14 @@ window.addEventListener("keypress", function (evt) {
 function scriptLoad(exampleNum) {
   switch (exampleNum) {
     case 1:
+      audio.pause();
+      audio.currentTime = 0;
+
+      gradientMode = false;
+      audioPlaying = false;
+      particleSize = 3;
+      fade = 0.1;
+      switchParticleColour('rgb(0,255,255)')
 
       //Clear fields and emmiters
       for (var i = 1; i < fields.length; i++) {
@@ -404,7 +424,6 @@ function scriptLoad(exampleNum) {
       }
 
       emitters.push(new Emitter(new Vector(200, 500), Vector.fromAngle(0, 2)));
-      gradientMode = true;
       spreadCon = 1;
       emissionRate = 15;
       fields.push(new Field(new Vector(400, 300), 1000))
@@ -412,6 +431,13 @@ function scriptLoad(exampleNum) {
       break;
 
     case 2:
+      audio.pause();
+      audio.currentTime = 0;
+      gradientMode = false;
+      audioPlaying = false;
+      fade = 0.1
+      particleSize = 4;
+      switchParticleColour('rgb(255,0,255)')
       //Clear fields and emmiters
       for (var i = 0; i < fields.length; i++) {
         fields.pop();
@@ -428,7 +454,9 @@ function scriptLoad(exampleNum) {
       break;
 
     case 3:
-      audioPlaying = true;
+      gradientMode = true;
+      fade = 0.2
+      particleSize = 8;
 
       //Clear fields and emmiters
       for (var i = 0; i < fields.length + 1; i++) {
@@ -438,27 +466,10 @@ function scriptLoad(exampleNum) {
       for (var i = 0; i < emitters.length; i++) {
         emitters.pop();
       }
+      audio.currentTime = 0;
+      audioPlaying = true;
+      audio.play();
 
-      var audio = new Audio();
-      audio.src = "kay.mp3";
-      audio.controls = false;
-      audio.loop = false;
-      audio.autoplay = true;
-
-      //Create new object audio instance
-      context = new AudioContext();
-      gradientMode = true;
-      fade = 0.2
-      //Create analyser on context
-      analyser = context.createAnalyser();
-
-      particleSize = 8;
-      //Pass audio into create media method
-      source = context.createMediaElementSource(audio);
-
-      //run connect method  on analyser and context
-      source.connect(analyser);
-      analyser.connect(context.destination);
       break;
   }
 }
