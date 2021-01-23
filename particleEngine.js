@@ -1,10 +1,12 @@
 "use strict";
 var audio = new Audio();
-audio.src = "kay.mp3";
+audio.src = "skepta.mp3";
 audio.controls = false;
 audio.loop = false;
 audio.autoplay = false;
-context = new AudioContext();
+
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
+var context = new AudioContext();
 
 analyser = context.createAnalyser();
 source = context.createMediaElementSource(audio);
@@ -33,14 +35,14 @@ var analyser, source, fbc_array = 0, audioPlaying = false;
 var canvas = document.querySelector('canvas');
 var ctx = canvas.getContext('2d');
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.width = document.documentElement.clientWidth;
+canvas.height = document.documentElement.clientHeigh;
 
 
 window.addEventListener('resize', resizeCanvas, false);
 function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  canvas.width = document.documentElement.clientWidth;
+  canvas.height = document.documentElement.clientHeight;
 }
 
 resizeCanvas();
@@ -250,8 +252,6 @@ function plotParticles(boundsX, boundsY) {
   particles = currentParticles;
 }
 
-window.AudioContext = window.AudioContext || window.webkitAudioContext;
-var context = new AudioContext();
 
 function drawParticles() {
   ctx.fillStyle = particleColour;
@@ -260,16 +260,16 @@ function drawParticles() {
     //position.y = fbc_array[i];
     if (audioPlaying) {
 
-      // position.x -= 10  ;
-      position.y = -fbc_array[i] + 450;
+ 
+      position.y =- fbc_array[i]  + 450;
 
-      if (position.x > window.innerWidth || position.x < 0) {
-        position.x = window.innerWidth / 2
+
+      if (position.x > canvas.width || position.x < 0) {
+        position.x = canvas.width / 2
       }
 
-
       if (position.y <= 450 && position.y >= 400) {
-        position.y = + 20
+        position.y = 20
       }
 
     }
@@ -300,7 +300,7 @@ function drawParticles() {
     }
     else {
       var my_gradient = ctx.createLinearGradient(0, 0, 0, 500);
-      my_gradient.addColorStop(0.1, "red");
+      my_gradient.addColorStop(0.6, "purple");
       my_gradient.addColorStop(1, "yellow");
       ctx.fillStyle = my_gradient;
       ctx.fillRect(position.x, position.y, particleSize, particleSize);
@@ -377,12 +377,12 @@ var currentMousY;
 canvas.addEventListener('mousemove', function (evt) {
   if (mouseBool) {
     var mousePos = getMousePos(canvas, evt);
+    if (fields[0]) {
+      fields[0].position.x = mousePos.x;
+      fields[0].position.y = mousePos.y;
 
-    fields[0].position.x = mousePos.x;
-    fields[0].position.y = mousePos.y;
-
-    fields[0].setMass(currentMag);
-
+      fields[0].setMass(currentMag);
+    }
     //Update current position
     currentMousX = mousePos.x;
     currentMousY = mousePos.y;
@@ -410,7 +410,7 @@ function scriptLoad(exampleNum) {
 
       gradientMode = false;
       audioPlaying = false;
-      particleSize = 3;
+      particleSize = 2;
       fade = 0.1;
       switchParticleColour('rgb(0,255,255)')
 
@@ -455,8 +455,8 @@ function scriptLoad(exampleNum) {
 
     case 3:
       gradientMode = true;
-      fade = 0.2
-      particleSize = 8;
+      fade = 0.18
+      particleSize = 9;
 
       //Clear fields and emmiters
       for (var i = 0; i < fields.length + 1; i++) {
@@ -466,8 +466,10 @@ function scriptLoad(exampleNum) {
       for (var i = 0; i < emitters.length; i++) {
         emitters.pop();
       }
+
       audio.currentTime = 0;
       audioPlaying = true;
+      context.resume()
       audio.play();
 
       break;
